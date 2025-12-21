@@ -158,7 +158,7 @@ class UR5GraspEnv:
         #     rgb = np.zeros((self.height, self.width, 3), dtype=np.uint8)
         #     mujoco.mjr_readPixels(rgb, None, self.offscreen_viewport, self.offscreen_context)
             
-        #     # 转换颜色空间并显示
+        #     # 转换颜色空间并显示a
         #     bgr = cv2.cvtColor(np.flipud(rgb), cv2.COLOR_RGB2BGR)
         #     cv2.imshow('MuJoCo Camera Output', bgr)
             

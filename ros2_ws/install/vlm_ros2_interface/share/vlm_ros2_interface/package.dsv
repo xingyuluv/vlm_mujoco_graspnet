@@ -1,0 +1,9 @@
+source;share/vlm_ros2_interface/hook/pythonpath.ps1
+source;share/vlm_ros2_interface/hook/pythonpath.dsv
+source;share/vlm_ros2_interface/hook/pythonpath.sh
+source;share/vlm_ros2_interface/hook/ament_prefix_path.ps1
+source;share/vlm_ros2_interface/hook/ament_prefix_path.dsv
+source;share/vlm_ros2_interface/hook/ament_prefix_path.sh
+source;../../build/vlm_ros2_interface/share/vlm_ros2_interface/hook/pythonpath_develop.ps1
+source;../../build/vlm_ros2_interface/share/vlm_ros2_interface/hook/pythonpath_develop.dsv
+source;../../build/vlm_ros2_interface/share/vlm_ros2_interface/hook/pythonpath_develop.sh

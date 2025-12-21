@@ -1,0 +1,4 @@
+[console_scripts]
+mujoco_bridge = vlm_ros2_interface.mujoco_bridge:main
+vlm_client = vlm_ros2_interface.vlm_client:main
+
