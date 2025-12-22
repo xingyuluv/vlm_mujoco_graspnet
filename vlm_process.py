@@ -48,7 +48,7 @@ def generate_robot_actions(user_command, image_input=None):
     """
     # 初始化OpenAI客户端
     # 替换为自己的模型调用
-    client = OpenAI(api_key='sk-92e5d2bbb4324174b0c5158fface3c78', base_url="https://dashscope.aliyuncs.com/compatible-mode/v1")
+    client = OpenAI(api_key='', base_url="")
 
     system_prompt = textwrap.dedent("""\
     你是一个精密机械臂视觉控制系统，具备先进的多模态感知能力。请严格按照以下步骤执行任务：
