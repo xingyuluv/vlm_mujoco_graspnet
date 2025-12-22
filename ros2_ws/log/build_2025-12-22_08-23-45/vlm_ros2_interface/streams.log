@@ -1,0 +1,18 @@
+[0.586s] Invoking command in '/home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface': PYTHONPATH=/home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface/build --no-deps symlink_data
+[0.801s] running develop
+[0.952s] running egg_info
+[0.952s] writing vlm_ros2_interface.egg-info/PKG-INFO
+[0.952s] writing dependency_links to vlm_ros2_interface.egg-info/dependency_links.txt
+[0.952s] writing entry points to vlm_ros2_interface.egg-info/entry_points.txt
+[0.953s] writing requirements to vlm_ros2_interface.egg-info/requires.txt
+[0.953s] writing top-level names to vlm_ros2_interface.egg-info/top_level.txt
+[0.954s] reading manifest file 'vlm_ros2_interface.egg-info/SOURCES.txt'
+[0.961s] writing manifest file 'vlm_ros2_interface.egg-info/SOURCES.txt'
+[0.992s] running build_ext
+[0.992s] Creating /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/python3.10/site-packages/vlm-ros2-interface.egg-link (link to .)
+[0.992s] Installing mujoco_bridge script to /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/vlm_ros2_interface
+[0.993s] Installing vlm_client script to /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/vlm_ros2_interface
+[0.993s] 
+[0.993s] Installed /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface
+[0.993s] running symlink_data
+[1.019s] Invoked command in '/home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface' returned '0': PYTHONPATH=/home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface/prefix_override:/usr/lib/python3/dist-packages/colcon_core/task/python/colcon_distutils_commands:/home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/python3.10/site-packages:${PYTHONPATH} /usr/bin/python3 -W ignore:setup.py install is deprecated -W ignore:easy_install command is deprecated setup.py develop --editable --build-directory /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface/build --no-deps symlink_data

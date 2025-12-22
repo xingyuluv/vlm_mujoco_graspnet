@@ -1,0 +1,16 @@
+running develop
+running egg_info
+writing vlm_ros2_interface.egg-info/PKG-INFO
+writing dependency_links to vlm_ros2_interface.egg-info/dependency_links.txt
+writing entry points to vlm_ros2_interface.egg-info/entry_points.txt
+writing requirements to vlm_ros2_interface.egg-info/requires.txt
+writing top-level names to vlm_ros2_interface.egg-info/top_level.txt
+reading manifest file 'vlm_ros2_interface.egg-info/SOURCES.txt'
+writing manifest file 'vlm_ros2_interface.egg-info/SOURCES.txt'
+running build_ext
+Creating /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/python3.10/site-packages/vlm-ros2-interface.egg-link (link to .)
+Installing mujoco_bridge script to /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/vlm_ros2_interface
+Installing vlm_client script to /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/install/vlm_ros2_interface/lib/vlm_ros2_interface
+
+Installed /home/xingyu/projects/VLM_Grasp_Interactive/ros2_ws/build/vlm_ros2_interface
+running symlink_data

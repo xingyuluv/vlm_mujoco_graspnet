@@ -1,97 +1,109 @@
 import rclpy
 from rclpy.node import Node
 from sensor_msgs.msg import Image
-from geometry_msgs.msg import Pose
+from std_msgs.msg import Float64MultiArray
 from cv_bridge import CvBridge
 import cv2
 import numpy as np
+import threading
+import time
+
+# 导入你原来的 VLM 逻辑
 import sys
-import os
+sys.path.append('/home/xingyu/projects/VLM_Grasp_Interactive')
+from vlm_process import generate_robot_actions, segment_image
+# 注意：你需要把 main_vlm.py 里的逻辑拆解一下，或者在这里重写
 
-# 引入你的 VLM 和 Grasp 处理模块
-# 同样需要添加路径
-sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "../../../../../")))
-
-# 假设你有这几个模块 (根据你的 main_vlm.py 调整)
-# from vlm_process import VLMProcessor
-# from grasp_process import GraspProcessor
-
-class VLMClient(Node):
+class VLMClientNode(Node):
     def __init__(self):
-        super().__init__('vlm_brain_node')
+        super().__init__('vlm_client_node')
         
-        self.cv_bridge = CvBridge()
-        self.latest_rgb = None
-        self.latest_depth = None
+        self.bridge = CvBridge()
+        self.latest_image = None
+        self.image_lock = threading.Lock()
         
-        # 1. 订阅仿真画面
-        self.create_subscription(Image, '/camera/rgb', self.rgb_callback, 10)
-        self.create_subscription(Image, '/camera/depth', self.depth_callback, 10)
+        # [订阅者] 接收图像
+        self.subscription = self.create_subscription(
+            Image,
+            '/camera/image_raw',
+            self.image_callback,
+            10
+        )
         
-        # 2. 发布控制指令
-        self.cmd_pub = self.create_publisher(Pose, '/robot/execute_grasp', 10)
+        # [发布者] 发送控制指令
+        self.command_pub = self.create_publisher(Float64MultiArray, '/robot/command', 10)
         
-        # 3. 逻辑控制定时器 (例如每 5 秒做一次决策，或者等待用户输入)
-        self.process_timer = self.create_timer(5.0, self.decision_loop)
+        self.get_logger().info('VLM Client 节点已启动，等待图像...')
         
-        self.get_logger().info('VLM Brain Node Ready. Waiting for images...')
+        # 在单独线程中运行主逻辑，避免阻塞 ROS 回调
+        self.main_thread = threading.Thread(target=self.main_logic)
+        self.main_thread.start()
 
-    def rgb_callback(self, msg):
+    def image_callback(self, msg):
+        """接收图像并保存"""
         try:
-            self.latest_rgb = self.cv_bridge.imgmsg_to_cv2(msg, desired_encoding="rgb8")
+            cv_image = self.bridge.imgmsg_to_cv2(msg, desired_encoding='bgr8')
+            with self.image_lock:
+                self.latest_image = cv_image
         except Exception as e:
-            self.get_logger().error(f'RGB decode error: {e}')
+            self.get_logger().error(f'图像接收错误: {e}')
 
-    def depth_callback(self, msg):
-        try:
-            self.latest_depth = self.cv_bridge.imgmsg_to_cv2(msg, desired_encoding="passthrough")
-        except Exception as e:
-            self.get_logger().error(f'Depth decode error: {e}')
+    def publish_joints(self, joints):
+        """发送关节角度"""
+        msg = Float64MultiArray()
+        msg.data = joints.tolist() if isinstance(joints, np.ndarray) else joints
+        self.command_pub.publish(msg)
+        self.get_logger().info(f'已发送指令: {joints}')
 
-    def decision_loop(self):
-        """
-        这里放你 main_vlm.py 的核心逻辑
-        """
-        if self.latest_rgb is None:
-            self.get_logger().info('Waiting for camera data...')
-            return
+    def main_logic(self):
+        """主控制循环 (相当于原来的 main_vlm.py)"""
+        
+        # 等待第一帧图像
+        while self.latest_image is None:
+            time.sleep(0.1)
+        self.get_logger().info('收到第一帧图像，开始交互流程...')
+
+        while rclpy.ok():
+            # 1. 获取当前图像快照
+            with self.image_lock:
+                current_img = self.latest_image.copy()
             
-        self.get_logger().info('Processing VLM logic...')
-        
-        # --- 伪代码：集成你的 VLM 逻辑 ---
-        # 1. 保存图片
-        # cv2.imwrite("temp_vlm.jpg", self.latest_rgb)
-        
-        # 2. 调用 VLM (Gemini/GPT4v)
-        # text_instruction = "Grasp the red apple"
-        # grasp_target = vlm_processor.process(text_instruction, "temp_vlm.jpg")
-        
-        # 3. 调用 GraspNet
-        # grasp_pose = graspnet.detect(self.latest_rgb, self.latest_depth, grasp_target)
-        
-        # 4. 如果找到抓取位姿，发送给 MuJoCo Bridge
-        # 假设 grasp_pose 是 [x, y, z]
-        found_grasp = True # 模拟
-        target_pos = [0.5, 0.0, 0.3] # 模拟数据
-        
-        if found_grasp:
-            msg = Pose()
-            msg.position.x = float(target_pos[0])
-            msg.position.y = float(target_pos[1])
-            msg.position.z = float(target_pos[2])
-            # msg.orientation...
+            # 2. (可选) 获取用户指令
+            # command_text = input("请输入抓取指令: ")
+            command_text = "抓取红色的方块" # 模拟输入
             
-            self.cmd_pub.publish(msg)
-            self.get_logger().info(f'Sent grasp command: {target_pos}')
-        else:
-            self.get_logger().info('No grasp found.')
+            self.get_logger().info(f'处理指令: {command_text}')
+
+            # 3. 调用你的 VLM/GraspNet 算法 (复用你现有的函数)
+            # 注意：这里需要根据你 vlm_process.py 的具体返回值修改
+            try:
+                # 示例逻辑：
+                # mask = segment_image(current_img, command_text)
+                # grasp_pose = calculate_grasp(mask, ...)
+                # joint_path = ik_solver(grasp_pose)
+                
+                # 假设算出了一组目标关节角度
+                dummy_joints = [0.0, -1.57, 1.57, 0.0, 0.0, 0.0] 
+                
+                # 4. 发送给 MuJoCo Bridge 执行
+                self.publish_joints(dummy_joints)
+                
+            except Exception as e:
+                self.get_logger().error(f'算法处理出错: {e}')
+            
+            # 暂停一下，模拟交互间隔
+            time.sleep(5)
 
 def main(args=None):
     rclpy.init(args=args)
-    node = VLMClient()
-    rclpy.spin(node)
-    node.destroy_node()
-    rclpy.shutdown()
+    node = VLMClientNode()
+    try:
+        rclpy.spin(node)
+    except KeyboardInterrupt:
+        pass
+    finally:
+        node.destroy_node()
+        rclpy.shutdown()
 
 if __name__ == '__main__':
     main()
