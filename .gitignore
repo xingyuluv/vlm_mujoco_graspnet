@@ -1,1 +1,26 @@
-sam_b.pt
+
+.env
+# --- ROS2 编译产生的垃圾文件 (绝对不要上传) ---
+build/
+install/
+log/
+.colcon/
+
+# --- Python 缓存 ---
+__pycache__/
+*.pyc
+
+# --- 大模型权重 (GitHub 单文件限制 100MB，超过会报错) ---
+*.pt
+*.pth
+*.ckpt
+*.onnx
+# 如果你的权重放在特定文件夹，也可以忽略文件夹
+checkpoints/
+weights/
+
+# --- VS Code 配置 ---
+.vscode/
+
+# --- 系统文件 ---
+.DS_Store

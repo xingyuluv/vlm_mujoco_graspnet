@@ -1,0 +1,74 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://wiki.ros.org/xacro" name="ur5e_robotiq">
+
+  <xacro:include filename="$(find ur_description)/urdf/ur_macro.xacro"/>
+
+  <xacro:ur_robot
+    name="ur"
+    tf_prefix=""
+    parent="world"
+    joint_limits_parameters_file="$(find ur_description)/config/ur5e/joint_limits.yaml"
+    kinematics_parameters_file="$(find ur_description)/config/ur5e/default_kinematics.yaml"
+    physical_parameters_file="$(find ur_description)/config/ur5e/physical_parameters.yaml"
+    visual_parameters_file="$(find ur_description)/config/ur5e/visual_parameters.yaml"
+    transmission_hw_interface="hardware_interface/PositionJointInterface"
+    safety_limits="false"
+    safety_pos_margin="0.15"
+    safety_k_position="20">
+    <origin xyz="0 0 0" rpy="0 0 0" /> </xacro:ur_robot>
+
+  <link name="world" />
+
+  <link name="robotiq_coupler">
+    <visual>
+      <geometry>
+        <cylinder radius="0.0375" length="0.014"/>
+      </geometry>
+      <material name="black">
+        <color rgba="0.1 0.1 0.1 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <cylinder radius="0.0375" length="0.014"/>
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="ur_to_robotiq" type="fixed">
+    <parent link="tool0"/>
+    <child link="robotiq_coupler"/>
+    <origin xyz="0 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="gripper_base">
+    <visual>
+      <geometry>
+        <box size="0.05 0.05 0.1"/>
+      </geometry>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+      <material name="silver">
+        <color rgba="0.8 0.8 0.8 1"/>
+      </material>
+    </visual>
+    <collision>
+      <geometry>
+        <box size="0.05 0.05 0.1"/>
+      </geometry>
+      <origin xyz="0 0 0.05" rpy="0 0 0"/>
+    </collision>
+  </link>
+
+  <joint name="coupler_to_gripper" type="fixed">
+    <parent link="robotiq_coupler"/>
+    <child link="gripper_base"/>
+    <origin xyz="0 0 0.007" rpy="0 0 0"/>
+  </joint>
+
+  <link name="grasp_point" />
+  <joint name="gripper_to_tcp" type="fixed">
+    <parent link="gripper_base"/>
+    <child link="grasp_point"/>
+    <origin xyz="0 0 0.13" rpy="0 -1.5708 0"/> </joint>
+
+</robot>

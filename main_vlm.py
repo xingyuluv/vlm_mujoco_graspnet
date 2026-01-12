@@ -11,11 +11,18 @@ sys.path.append(os.path.join(ROOT_DIR, 'graspnet-baseline', 'dataset'))
 sys.path.append(os.path.join(ROOT_DIR, 'graspnet-baseline', 'utils'))
 sys.path.append(os.path.join(ROOT_DIR, 'manipulator_grasp'))
 
-from manipulator_grasp.env.ur5_grasp_env import UR5GraspEnv
+from manipulator_grasp.env.ur5_grasp_old_env import UR5GraspEnv
+#Qwen-vl version
 
-from vlm_process import segment_image
-from grasp_process import run_grasp_inference, execute_grasp
+#yolo-world version
 
+from grasp_process_old import run_grasp_inference, execute_grasp
+#选择使用新的vlm_process还是旧的vlm_process_old
+USE_YOLO = True
+if USE_YOLO:
+    from vlm_process import segment_image
+else:
+    from vlm_process_old import segment_image  
 
 # 全局变量
 global color_img, depth_img, env
@@ -71,6 +78,9 @@ def test_grasp():
 
     # 图像处理部分
     masks = segment_image(color_img)  
+    if masks is None:
+        print("⚠️ 未检测到有效物体，跳过本次抓取。")
+        return  # 直接返回，不执行后面的 grasp_inference
 
     gg = run_grasp_inference(color_img, depth_img, masks)
 
