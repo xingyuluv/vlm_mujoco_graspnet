@@ -33,6 +33,10 @@ setup(
             'mujoco_bridge = vlm_ros2_interface.mujoco_bridge:main',
             'vlm_client = vlm_ros2_interface.vlm_client:main',
             'test_grasp_duck = vlm_ros2_interface.test_grasp_duck:main',
+            # MoveIt2 集成节点
+            'ros2_mujoco_core = vlm_ros2_interface.ros2_mujoco_core:main',
+            'ros2_vlm_manager = vlm_ros2_interface.ros2_vlm_manager:main',
+
         ],
     },
 )

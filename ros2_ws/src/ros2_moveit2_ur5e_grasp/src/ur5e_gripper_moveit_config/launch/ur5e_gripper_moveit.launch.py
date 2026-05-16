@@ -98,6 +98,13 @@ def launch_setup(context, *args, **kwargs):
     octomap_config = {'octomap_frame': 'camera_depth_optical_frame', 'octomap_resolution': 0.02}
     octomap_updater_config = load_yaml('ur5e_gripper_moveit_config', 'config/sensors_3d.yaml')    
     # Start the actual move_group node/action server
+    rsp_node = Node(
+        package="robot_state_publisher",
+        executable="robot_state_publisher",
+        output="screen",
+        parameters=[robot_description, {"use_sim_time": use_sim_time}],
+    )
+
     move_group_node = Node(
         package="moveit_ros_move_group",
         executable="move_group",
@@ -120,6 +127,7 @@ def launch_setup(context, *args, **kwargs):
 
     nodes_to_start = [
         move_group_node, 
+        rsp_node
         # rviz_node, 
     ]
 

@@ -30,10 +30,10 @@ logging.getLogger("ultralytics").setLevel(logging.WARNING)
 # ================= 0. 全局配置区 (在此处手动修改) =================
 
 # [输入模式选择] True = 使用麦克风语音输入; False = 使用键盘文字输入
-USE_VOICE_INPUT = False
+USE_VOICE_INPUT = True
 
 # [语音回复开关] True = 启用 Edge-TTS 语音播报; False = 仅在终端打印文字
-ENABLE_TTS_REPLY = False
+ENABLE_TTS_REPLY = True
 
 # ===================================================================
 
@@ -343,7 +343,7 @@ def segment_image(image_input, output_mask='mask1.png'):
     model.set_classes([target_obj_name])
     
     with torch.no_grad():
-        results = model.predict(image_input, conf=0.05, iou=0.5, verbose=False)
+        results = model.predict(image_input, conf=0.01, iou=0.5, verbose=False)
     
     bbox = None
     if len(results) > 0 and len(results[0].boxes) > 0:
